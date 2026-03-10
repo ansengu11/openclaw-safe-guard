@@ -1,4 +1,4 @@
-# 龙虾安全卫士 (openclaw-safe-guard) v1.0.3
+# 龙虾安全卫士 (openclaw-safe-guard) v1.0.4
 
 > 🦞 对已安装的 Skills 进行静态安全扫描，检测权限风险、恶意代码和依赖风险
 
