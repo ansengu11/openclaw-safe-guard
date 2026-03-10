@@ -1,7 +1,7 @@
 # skill.yaml - 龙虾安全卫士 平台注册元数据
 name: "龙虾安全卫士"
 id: "openclaw-safe-guard"
-version: "1.0.8"
+version: "1.0.9"
 description: "提供对已安装 Skills 的静态安全扫描，检测权限风险、恶意代码和依赖风险并生成中文风险评估报告"
 author: "ansengu11"
 license: "MIT-0"
