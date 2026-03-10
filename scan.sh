@@ -186,6 +186,11 @@ scan_github() {
     local github_info=$(get_github_info "$repo")
     IFS='|' read -r stars _ license updated desc <<< "$github_info"
     
+    # 修复：如果分隔符是 || 则重新解析
+    if [[ "$stars" == *"||"* ]]; then
+        IFS='|' read -r stars _ license updated desc <<< "$(echo "$github_info" | sed 's/||/|/g')"
+    fi
+    
     echo -e "${YELLOW}基础信息:${NC}"
     echo "  仓库: $repo"
     echo "  Stars: $stars"
