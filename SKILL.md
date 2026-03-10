@@ -1,17 +1,14 @@
-# 龙虾安全卫士 (openclaw-safe-guard) v1.0.2
+# 龙虾安全卫士 (openclaw-safe-guard) v1.0.3
 
-OpenClaw 安全扫描工具 v1.0.2 - 扫描 Skills 和系统安全风险
-
-OpenClaw Skill 安全审计工具 - 扫描已安装的 Skills，检测安全风险
+OpenClaw 安全扫描工具 v1.0.3 - 扫描 Skills 和系统安全风险
 
 ## 功能
 
-当用户请求扫描 Skill 安全时，使用此 Skill：
-
+此技能用于对已安装的 Skills 进行静态安全扫描：
 - 扫描指定 Skill 的权限风险
-- 检查是否有恶意代码
+- 检查是否有恶意代码（敏感 API 调用、凭证请求等）
 - 分析依赖包安全性
-- 生成中文风险报告
+- 生成中文风险评估报告
 - 给出修复建议
 
 ## 触发条件
@@ -71,55 +68,71 @@ AI: → 调用 openclaw-safe-guard，扫描所有已安装的 Skills
 建议：可使用，但需注意权限
 ```
 
-## 依赖要求
+## ⚠️ 安全警告
 
-此 Skill 依赖以下系统工具：
-- `curl` - 用于访问 GitHub API
-- `jq` - 用于解析 JSON 数据
-- `git` - 用于克隆 GitHub 仓库
-- `grep` - 用于搜索代码
-- `find` - 用于查找文件
+**在安装此技能前，请注意以下风险：**
 
-## 权限要求
+1. **文件系统读取**：此技能需要读取 `~/.openclaw/skills` 和 `~/.openclaw/workspace/skills` 目录，可能访问到其他技能中可能存在的敏感信息（如 API 密钥、凭证等）
 
-此 Skill 需要以下权限：
-- 读取 ~/.openclaw/skills 目录
-- 读取 ~/.openclaw/workspace/skills 目录
-- 访问 GitHub API（获取 Stars 等信息）
-- 读取 Skill 源码文件
-- 调用系统命令：curl, jq, git（用于获取 GitHub 信息）
+2. **网络访问**：会访问 GitHub API（api.github.com）获取技能元数据
 
-## 声明的权限
+3. **临时文件**：在线扫描时会将第三方 GitHub 仓库克隆到 `/tmp` 目录，扫描完成后会清理
+
+4. **仅静态分析**：不执行被扫描的技能代码，仅读取和分析源码
+
+## 所需系统工具（必须安装）
+
+| 工具 | 用途 |
+|------|------|
+| `curl` | 访问 GitHub API 获取技能信息 |
+| `jq` | 解析 JSON 数据 |
+| `git` | 克隆 GitHub 仓库（在线扫描时） |
+| `grep` | 搜索代码中的敏感模式 |
+| `find` | 查找技能文件 |
+
+## 权限声明（完整清单）
 
 ```json
 {
   "requires": {
-    "filesystem": ["~/.openclaw/skills", "~/.openclaw/workspace/skills", "/tmp"],
-    "commands": ["curl", "jq", "git", "grep", "find"],
-    "network": ["api.github.com", "github.com"]
+    "filesystem": [
+      "~/.openclaw/skills",
+      "~/.openclaw/workspace/skills",
+      "/tmp"
+    ],
+    "commands": [
+      "curl",
+      "jq", 
+      "git",
+      "grep",
+      "find"
+    ],
+    "network": [
+      "api.github.com",
+      "github.com"
+    ]
   },
   "dependencies": {
-    "system_tools": ["curl", "jq", "git", "grep", "find"]
+    "system_tools": [
+      "curl",
+      "jq",
+      "git",
+      "grep",
+      "find"
+    ]
   },
   "environment": {
-    "description": "需要网络访问 GitHub API 获取 Skill 信息"
+    "description": "需要网络访问 GitHub API 获取 Skill 信息，临时文件写入 /tmp 目录"
   }
 }
 ```
 
-## 安全提醒
-
-- 静态读取 Skill 源码可能发现敏感信息
-- 使用前请确认愿意授予读取权限
-- 不会执行或修改被扫描的 Skill 代码
-- 不会上传扫描结果到任何远程端点
-
 ## 安装前建议
 
-1. 确认元数据中明确列出了必需的配置路径和二进制
-2. 仅在隔离环境或受限账户下运行
-3. 人工审查 scan.sh 源码（已含在包内）
-4. 可在只读环境或容器中运行以提高安全性
+1. ✅ 确认系统已安装所需工具：curl, jq, git, grep, find
+2. ✅ 人工审查 scan.sh 源码（已含在包内）
+3. ✅ 建议在非 root 账户下运行
+4. ✅ 如有条件，可在容器或只读环境中运行
 
 ## 示例
 
@@ -139,12 +152,9 @@ AI: 正在扫描 ~/.openclaw/skills 目录...
 AI: 共扫描 X 个 Skills，发现 Y 个高风险...
 ```
 
-## 注意事项
+## 限制
 
-- 仅扫描已安装的 Skills
-- 不执行 Skill 代码，仅静态分析
-- 风险评估基于启发式规则，可能有误判
-- 建议配合人工审查
-- 脚本会读取被扫描 Skill 的源码，请注意敏感信息
-- 在线扫描会从 GitHub 克隆源码，被扫描代码可能包含敏感内容
-- 官方仓库 (openclaw/*) 会标记为"已通过官方审核"，跳过详细扫描
+- ⚠️ 风险评估基于启发式规则，可能有误判
+- ⚠️ 建议配合人工代码审查
+- ⚠️ 不保证 100% 检测所有安全问题
+- ⚠️ 官方仓库 (openclaw/*) 会标记为"已通过官方审核"，跳过详细扫描
