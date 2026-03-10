@@ -1,4 +1,4 @@
-# 龙虾安全卫士 (openclaw-safe-guard) v1.0.4
+# 龙虾安全卫士 (openclaw-safe-guard) v1.0.7
 
 > 🦞 对已安装的 Skills 进行静态安全扫描，检测权限风险、恶意代码和依赖风险
 
@@ -15,12 +15,14 @@
 
 ## 功能
 
-此技能用于对已安装的 Skills 进行静态安全扫描：
-- 扫描指定 Skill 的权限风险
-- 检查是否有恶意代码（敏感 API 调用、凭证请求等）
-- 分析依赖包安全性
-- 生成中文风险评估报告
-- 给出修复建议
+此技能（Security Scanner / Skill Auditor / 安全审计工具）用于对已安装的 Skills 进行静态安全扫描（安全审计、漏洞检测）：
+- 扫描指定 Skill 的权限风险（permission audit）
+- 检查是否有恶意代码（malware detection, vulnerability scan）
+- 分析依赖包安全性（dependency analysis）
+- 生成中文风险评估报告（Chinese language support）
+- 给出修复建议（security recommendations）
+
+**支持中文和英文界面输出**
 
 ## 触发条件
 
@@ -30,6 +32,16 @@
 - "这个 Skill 安全吗"
 - "帮我看看这个技能"
 - "扫描已安装的 Skills"
+- "安全审计"
+- "漏洞检测"
+- "系统安全"
+- "系统检测"
+- "龙虾安全检测"
+- "openclaw漏洞检测"
+- "技能安全检测"
+- "技能漏洞检测"
+- "ai系统检测"
+- "ai系统安全"
 
 ## 使用方式
 
